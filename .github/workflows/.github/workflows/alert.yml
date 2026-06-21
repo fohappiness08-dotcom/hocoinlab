@@ -1,0 +1,22 @@
+yaml
+name: Coin Price Alert
+
+on:
+  schedule:
+    - cron: '0 0 * * *'   # 매일 한국시간 오전 9시
+    - cron: '0 9 * * *'   # 매일 한국시간 오후 6시
+  workflow_dispatch:        # 수동 실행 버튼도 생김
+
+jobs:
+  send-alert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - run: python coin_alert.py
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
